@@ -121,17 +121,25 @@ export function createStore<T>(initState: T): Restate<T> {
 
       const stores = inputStoresFn(args)
       const handler = (values: StoresValues<S>, setFn: (value: V) => void) => {
-        const result = computationFn(values, args)
-        if (result === undefined) {
-          throw Error(`Subscription "${name}" with params ${args} has undefined value.`)
-        }
+        const result = computationFn(values, args) as V
         setFn(result)
       }
 
       const derivedStore = derived(stores, handler)
       const currentStore: Subscription<V> = {
         subscribe: (run: Subscriber<V>, invalidate?: Invalidator<V>) => {
-          const unsubscribe = derivedStore.subscribe(run, invalidate)
+          const protectedRun: Subscriber<V> = (value) => {
+            if (value === undefined) {
+              if (args) {
+                throw Error(`Subscription "${name}" with params ${JSON.stringify(args)} have undefined value.`)
+              } else {
+                throw Error(`Subscription "${name}" have undefined value.`)
+              }
+            }
+            run(value)
+          }
+
+          const unsubscribe = derivedStore.subscribe(protectedRun, invalidate)
 
           const sub = runningSubs[subPath]
           if (sub) {

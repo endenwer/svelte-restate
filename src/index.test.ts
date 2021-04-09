@@ -81,7 +81,7 @@ describe('createStore', () => {
         ($root, [id]: [number]) => $root.projects[id]
       )
 
-      assert.throws(() => project(2).subscribe(() => {}), /Subscription "project" with params 2 has undefined value./)
+      assert.throws(() => project(2).subscribe(() => {}), /Subscription "project" with params \[2\] have undefined value./)
     })
   })
 

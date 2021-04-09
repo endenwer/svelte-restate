@@ -2,7 +2,7 @@
   "include": ["src"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "types": ["svelte"],
+    "types": ["svelte", "snowpack-env"],
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "node",
