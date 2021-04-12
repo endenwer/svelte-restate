@@ -72,17 +72,6 @@ describe('createStore', () => {
       unsubscribe2()
       assert.deepStrictEqual(Object.keys(store.getRunningSubsState()), [])
     })
-
-    it('does not allow subscription to return undefined', () => {
-      const store = createStore(initState)
-      const project = store.regSub(
-        'project',
-        () => store.root,
-        ($root, [id]: [number]) => $root.projects[id]
-      )
-
-      assert.throws(() => project(2).subscribe(() => {}), /Subscription "project" with params \[2\] have undefined value./)
-    })
   })
 
   describe('regRootSub', () => {

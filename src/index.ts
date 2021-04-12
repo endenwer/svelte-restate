@@ -7,12 +7,12 @@ export interface Restate<T> {
   regSub<V, S extends Subscriptions, Args extends any[]>(
     name: string,
     inputStoresFn: (args: Args) => S,
-    computationFn: (values: StoresValues<S>, args: Args) => V | undefined
+    computationFn: (values: StoresValues<S>, args: Args) => V
   ): (...args: Args) => Subscription<V>
 
   regRootSub<V, Args extends any[]>(
     name: string,
-    computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V | undefined
+    computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V
   ): (...args: Args) => Subscription<V>
 
   regMut(name: string, handler: (draft: Draft<T>) => void): MutHandler<T>
@@ -34,7 +34,7 @@ type Subscriber<T> = (value: T) => void
 type Invalidator<T> = (value?: T) => void
 
 interface Subscription<T> extends Readable<T> {
-  getState: () => T | undefined
+  getState: () => T
 }
 
 type Subscriptions = Subscription<any> | [Subscription<any>, ...Array<Subscription<any>>]
@@ -109,7 +109,7 @@ export function createStore<T>(initState: T): Restate<T> {
   function regSub<V, S extends Subscriptions, Args extends any[]>(
     name: string,
     inputStoresFn: (args: Args) => S,
-    computationFn: (values: StoresValues<S>, args: Args) => V | undefined
+    computationFn: (values: StoresValues<S>, args: Args) => V
   ): (...args: Args) => Subscription<V> {
 
     return (...args: Args) => {
@@ -121,25 +121,13 @@ export function createStore<T>(initState: T): Restate<T> {
 
       const stores = inputStoresFn(args)
       const handler = (values: StoresValues<S>, setFn: (value: V) => void) => {
-        const result = computationFn(values, args) as V
-        setFn(result)
+        setFn(computationFn(values, args))
       }
 
       const derivedStore = derived(stores, handler)
       const currentStore: Subscription<V> = {
         subscribe: (run: Subscriber<V>, invalidate?: Invalidator<V>) => {
-          const protectedRun: Subscriber<V> = (value) => {
-            if (value === undefined) {
-              if (args) {
-                throw Error(`Subscription "${name}" with params ${JSON.stringify(args)} have undefined value.`)
-              } else {
-                throw Error(`Subscription "${name}" have undefined value.`)
-              }
-            }
-            run(value)
-          }
-
-          const unsubscribe = derivedStore.subscribe(protectedRun, invalidate)
+          const unsubscribe = derivedStore.subscribe(run, invalidate)
 
           const sub = runningSubs[subPath]
           if (sub) {
@@ -166,7 +154,7 @@ export function createStore<T>(initState: T): Restate<T> {
 
   function regRootSub<V, Args extends any[]>(
     name: string,
-    computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V | undefined
+    computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V
   ): (...args: Args) => Subscription<V> {
     return regSub(name, () => root, computationFn)
   }

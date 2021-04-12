@@ -58,6 +58,8 @@ export function connectToDevTools(store: Restate<any>, muts: {[key: string]: Fun
     return
   }
 
+  devToolsSubs.init(store.getRunningSubsState())
+
   store.listenSubs((action, name) => {
     devToolsSubs.send({type: action, payload: {name}}, store.getRunningSubsState())
   })

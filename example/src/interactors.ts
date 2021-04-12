@@ -7,7 +7,6 @@ export function loadTodos() {
   muts.setLoading(true)
   const [ids, entities] = fetchTodos()
 
-  console.log('loaded')
   appDB.transaction((tx) => [
     muts.setLoading(false, tx),
     muts.insertTodos([ids, entities], tx)
@@ -72,7 +71,7 @@ function saveTodos() {
 
 function uuid() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
 }

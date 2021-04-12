@@ -5,7 +5,7 @@
 
   const activeCount = subs.activeCount()
   const completedCount = subs.completedCount()
-  const visibleTodoIds= subs.visibleTodoIds()
+  const visibleTodos= subs.visibleTodos()
   const filter = subs.filter()
 </script>
 
@@ -14,8 +14,8 @@
   <label for="toggle-all">Mark all as complete</label>
 
   <ul class="todo-list">
-    {#each $visibleTodoIds as id (id)}
-      <Todo {id} />
+    {#each $visibleTodos as todo (todo.id)}
+      <Todo {todo} />
     {/each}
   </ul>
 

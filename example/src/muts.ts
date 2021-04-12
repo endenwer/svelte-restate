@@ -68,6 +68,7 @@ const clearCompleted = appDB.regMut(
     draft.todoIds = draft.todoIds.filter(id => {
       const todo = draft.todoEntities[id]
       if (todo && todo.completed) {
+        delete draft.todoEntities[id]
         return false
       }
       return true
@@ -80,6 +81,7 @@ const deleteTodo = appDB.regMut<string>(
   (draft, id) => {
     const todo = draft.todoEntities[id]
     if (!todo) return
+    delete draft.todoEntities[id]
     draft.todoIds = draft.todoIds.filter((i) => i !== id)
   }
 )

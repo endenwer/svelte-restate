@@ -32,31 +32,24 @@ const todos = appDB.regSub(
   ([$todoIds, $todoEntities]) => {
     return $todoIds.reduce((todos: Todo[], id) => {
       const todo = $todoEntities[id]
-      if (todo) return [...todos, todo]
-      return todos
+      return todo ? [...todos, todo] : todos
     }, [])
   }
 )
 
-const visibleTodoIds = appDB.regSub(
-  'visibleTodoIds',
+const visibleTodos = appDB.regSub(
+  'visibleTodos',
   () => [filter(), todos()],
   ([$filter, $todos]) => {
     if ($filter === 'all') {
-      return $todos.map(todo => todo.id)
+      return $todos
     }
 
     if ($filter === 'active') {
-      return $todos.reduce((ids: string[], todo: Todo | undefined) => {
-        if (todo && !todo.completed) return [...ids, todo.id]
-        return ids
-      }, [])
+      return $todos.filter(todo => !todo.completed)
     }
 
-    return $todos.reduce((ids: string[], todo: Todo | undefined) => {
-      if (todo && todo.completed) return [...ids, todo.id]
-      return ids
-    }, [])
+    return $todos.filter(todo => todo.completed)
   }
 )
 
@@ -72,22 +65,13 @@ const activeCount = appDB.regSub(
   ([$todos, $completedCount]) => $todos.length - $completedCount
 )
 
-const todo = appDB.regSub(
-  'todo',
-  () => todoEntities(),
-  ($todoEntities, [id]: [string]) => {
-    return $todoEntities[id]
-  }
-)
-
 export default {
   isLoading,
   filter,
   editingTodoId,
   todoIds,
   todoEntities,
-  visibleTodoIds,
-  todo,
+  visibleTodos,
   completedCount,
   activeCount
 }
