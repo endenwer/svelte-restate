@@ -36,6 +36,7 @@
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
     "chai": "^4.3.4",
+    "docsify-cli": "^4.4.3",
     "immer": "^9.0.1",
     "mocha": "^8.3.2",
     "rollup": "^2.44.0",
