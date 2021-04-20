@@ -1,14 +1,30 @@
 # API
 
+* [svelte-restate](#svelte-restate)
+  * [createStore()](#create-store)
+* [svelte-restate/devtools](#svelte-restate-devtools)
+  * [connectTodevtools()](#connect-to-devtools)
+* [Restate instance](#restate)
+  * [root](#root)
+  * [regRootsub()](#reg-root-sub)
+  * [regSub()](#reg-sub)
+  * [regMut()](#reg-mut)
+  * [transaction()](#transaction)
+  * [listenSubs()](#listen-subs)
+  * [listenMuts()](#listen-muts)
+  * [set()](#set)
+  * [getRunningSubsState()](#get-running-subs-state)
+* [Subscription instance](#statics)
+  * [subscribe()](#subscribe)
+  * [getState()](#get-state)
+
+<a id=svelte-restate></a>
 ## svelte-restate
 
-### `createStore`
+<a id=create-store></a>
+### `createStore<T>(initState: T): Restate<T>`
 
-```ts
-createStore<T>(initState: T): Restate<T>
-```
-
-Create new store with `initialState`.
+Creates new store with initial state. See [`Restate<T>` documentation](#restate-object-api).
 
 ```ts
 import { createStore } from 'svelte-restate'
@@ -30,29 +46,26 @@ const initState: State = {
 export default createStore(initState)
 ```
 
+<a id=svelte-restate-devtools></a>
 ## svelte-restate/devtools
 
-### `connectToDevtools`
+<a id=connect-to-devtools></a>
+### `connectToDevTools(store: Restate<any>, muts: {[key: string]: Function} = {})`
 
-Connects to Redux Devtools
+Connects to Redux Devtools. To dispatch mutaions from devtools you need to pass mutaions object as second argument.
 
-```
-connectToDevTools(store: Restate<any>, muts: {[key: string]: Function} = {})
-```
-
+<a id=restate></a>
 ## `Restate<T>`
 
-State object returned by `createState`.
+State object returned by [`createState`](#create-state).
 
+<a id=root></a>
 ### `root`
 
 Root subscription.
 
-### `regRootSub`
-
-```ts
-regRootSub<V, Args extends any[]>(name: string, computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V): (...args: Args) => Subscription<V>
-```
+<a id=reg-root-sub></a>
+### `regRootSub<V, Args extends any[]>(name: string, computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V): (...args: Args) => Subscription<V>`
 
 Creates new root subscription and cache it. The returned function will accept subscription's arguments and will create new subscription on first call and return cached subscription on consecitive calls.
 
@@ -74,11 +87,8 @@ export default {
 }
 ```
 
-### `regSub`
-
-```ts
-regSub<V, S extends Subscriptions, Args extends any[]>(name: string, inputStoresFn: (args: Args) => S, computationFn: (values: StoresValues<S>, args: Args) => V): (...args: Args) => Subscription<V>
-```
+<a id=reg-sub></a>
+### `regSub<V, S extends Subscriptions, Args extends any[]>(name: string, inputStoresFn: (args: Args) => S, computationFn: (values: StoresValues<S>, args: Args) => V): (...args: Args) => Subscription<V>`
 
 Works like `ReguRootSub`, but accept `inputStoresFn` as the second arguments.
 
@@ -120,17 +130,11 @@ const isTodoIncludesString = store.RegSub(
 )
 ```
 
-### `regMut`
+<a id=reg-mut></a>
+### `regMut(name: string, handler: (draft: Draft<T>) => void): MutHandler<T>`
+### `regMut<Params>(name: string, handler: (draft: Draft<T>, params: Params) => void): MutHandlerWithParams<T, Params>`
 
 Registers new mutation handler.
-
-```ts
-regMut(name: string, handler: (draft: Draft<T>) => void): MutHandler<T>
-```
-
-```ts
-regMut<Params>(name: string, handler: (draft: Draft<T>, params: Params) => void): MutHandlerWithParams<T, Params>
-```
 
 Paramenters:
 
@@ -157,13 +161,10 @@ export default {
   addTodo
 }
 
-### `transaction`
+<a id=transaction></a>
+### `transaction(fn: (tx: Transaction<T>) => MutReturnValue[]): void`
 
 Execute multiple mutations within transaction.
-
-```ts
-transaction(fn: (tx: Transaction<T>) => MutReturnValue[]): void
-```
 
 Paramenters:
 
@@ -185,31 +186,8 @@ export function loadTodos() {
 }
 ```
 
-### `listenMuts`
-
-```ts
-listenMuts(handler: (name: string, params: unknown) => void): Unsubscriber
-```
-
-Listens for mutations.
-
-Paramenters:
-
-* `handler` - receives mutation name and parameters
-
-```ts
-import store from './store'
-
-store.listenMuts((name, params) => {
-  console.log(name, params)
-})
-```
-
-### `listenSubs`
-
-```ts
-listenSubs(handler: (action: 'SUB_CREATED' | 'SUB_DELETED', params: unknown) => void): Unsubscriber
-```
+<a id=listen-subs></a>
+### `listenSubs(handler: (action: 'SUB_CREATED' | 'SUB_DELETED', params: unknown) => void): Unsubscriber`
 
 Listens for subscription creation and removal.
 
@@ -225,26 +203,42 @@ store.listenSubs((action, params) => {
 })
 ```
 
-### `set`
+<a id=listen-muts></a>
+### `listenMuts(handler: (name: string, params: unknown) => void): Unsubscriber`
+
+Listens for mutations.
+
+Paramenters:
+
+* `handler` - receives mutation name and parameters
+
+```ts
+import store from './store'
+
+store.listenMuts((name, params) => {
+  console.log(name, params)
+})
+```
+
+<a id=set></a>
+### `set(value: T)`
 
 Directy mutates state. It is recomended to use mutation when you need to change state. This function is used for integration with Redux Devtools.
 
-### `getRunningSubsState`
+<a id=get-running-subs-state></a>
+### `getRunningSubsState(): {[key: string]: any}`
 
 Returns states of all cached subscriptions.
 
-```ts
-getRunningSubsState(): {[key: string]: any}
-```
-
+<a id=subscription></a>
 ## `Subscription<T>`
 
-### `getState`
+<a id=subscribe></a>
+### `subscribe(fn: (T) => void): () => void`
+
+Subscribes to subscription.
+
+<a id=get-state></a>
+### `getState: () => T`
 
 Returns subscription's state.
-
-```ts
-getState: () => T
-```
-
-
