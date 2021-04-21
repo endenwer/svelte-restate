@@ -81,7 +81,7 @@ export default { setLoading, insertTodos }
 ```
 
 Use in svelte component.
-```ts
+```html
 <script>
   import muts from './muts'
   import subs from './subs'
@@ -102,10 +102,10 @@ Use in svelte component.
    muts.setLoading(true)
    const todos = fetchTodos()
 
-   // call mulltimple mutations within transaction
+   // call multiple mutations within transaction
    store.transaction(tx => [
-     muts.setIsLoading(false),
-     muts.insertTodos(todos)
+     muts.setIsLoading(false, tx),
+     muts.insertTodos(todos, tx)
    ])
   })
 </script>
