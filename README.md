@@ -1,3 +1,5 @@
+## Svelte Restate
+
 Immutable store for Svelte with full Typescript support and Redux Devtools integration.
 
 ## Install
