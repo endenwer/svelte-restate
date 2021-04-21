@@ -1,161 +1,69 @@
-## Features
-- Fully typed with Typescript
-- Immutable data
-- Integration with Redux Devtools. In addition to see store data, you can also see values of all active subscriptions
-- Layered subscriptions with lazy initialization
-- Mutations with transaction support
+Immutable store for Svelte with full Typescript support and Redux Devtools integration.
 
 ## Install
+
 ```sh
 npm i svelte-restate --save
-```
-or
-```sh
-yarn add svelte-restate
 ```
 
 ## Usage
 
-### Create store with initial state.
-- Normalize your data before storing it
-- Define interface for you store
-- Define initial state
-
+Create store with initial state.
 ```typescript
-import {createStore} from 'svelte-restate'
+import { createStore } from 'svelte-restate'
 
 export interface State {
-  isLoading: boolean
-  todos: {
-    id: string
-    description: string
-    completed: boolean
-  }[]
+  count: number
 }
 
 const initState: State = {
- isLoading: true,
- todos: []
+ count: 0,
 }
 
 export default createStore(initState)
 ```
 
-### Register subscriptions
-- Read more about different levels of subscriptions in re-frame
-
+Create subscriptions. See more examples in documentation for [`RegRootsub`](#reg-root-sub) and [`RegSub`](#reg-sub).
 ```typescript
 import store from './store'
 
-// register root subscription
-const todos = store.regRootSub(
-  'todos',
-  ($root) => $root.todos
+const count = store.regRootSub(
+  'count,
+  ($root) => $root.count
 )
 
-// register subscription without params
-const activeTodos = store.regSub(
-  'activeTodos'
-  () => todos(),
-  ($todos) => $todos.filter(todo => !todo.completed)
-)
-
-// register subscription with params
-const todo = store.regSub(
-  'todo',
-  () => todos(),
-  ($todos, [id]: [string]) => {$todos.find(todo => todo.id === id)}
-)
-
-export default {
-  todos,
-  activeTodos,
-  todo
-}
+export default { count }
 ```
 
-### Register mutations
-You need to mutate `draft` object. Read about how to do it right in immer documentation.
-
-```typescript
+Create mutations. See more examples in documentation for [`RegMut`](#reg-mut).
+```ts
 import store from './store'
 
-const setLoading = store.regMut<boolean>(
-  'setLoading',
-  (draft, value) => draft.isLoading = value
+const increaseCount  = store.regMut(
+  increaseCount,
+  (draft) => draft.count += 1
 )
-
-const addTodo = store.regMut<Todo>(
-  'insertProjects',
-  (draft, todo) => {
-    draft.todos.push(todo)
-  }
-)
-
-export default {
-  setLoading,
-  addTodo
-}
+export default { increaseCount }
 ```
 
-### Use subscriptions/mutations in components
-- If you need to mutate store syncrhoniosly just call a mutation
-- If you need to do async data loading, define interactor and call mutaions from it
-
-```html
-// App.svelte
-
+Use in svelte component.
+```ts
 <script>
-  import Projects from 'Projects.svelte'
-  import subs from './subs'
-  import { loadProjects } from './interactors'
-  import { onMount } from 'svelte'
-
-  const isLoading = subs.isLoading()
-
-  onMount(loadProjects)
-</script>
-
-{#if $isLoading}
-  <div>Loading...</div>
-{:else}
-  <Projects/>
-{/if}
-```
-
-```html
-// Projects.svelte
-
-<script>
-  import Project from 'Projects.svelte'
-  import subs from './subs'
-
-  const projectIds = subs.projectIds()
-</script>
-
-<h1>Projects</h1>
-
-{#each projectIds as id (id)}
-  <Project {id} />
-{/each}
-```
-
-```html
-// Project.svelte
-
-<script>
-  import subs from './subs'
   import muts from './muts'
+  import subs from './subs'
 
-  let id: number
-  $: project = subs.project(id)
+  const count = subs.count()
 </script>
 
-<div>
-  <h2>Project ##{project.id}</h2>
-  <input type="text" value={project.name} on:change={(e) => muts.changeProjectName(id, e.currentTarget.value)} />
-</div>
+<div on:click={muts.increaseCount()}>{$count}</div>
 ```
 
-## Documentation
-## Additional resources
+Connect to Redux devtools. See documentation for [`connectToDevtools`](#connect-to-devtools).
+```ts
+import muts from './muts'
+import store from './store'
+
+connectToDevTools(store, muts)
+```
+
+See more examples in demo.
