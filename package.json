@@ -1,5 +1,5 @@
 {
-  "name": "svelte-restate",
+  "name": "Svelete Restate example",
   "description": "Svelte state subscriptions/mutations",
   "version": "0.1.0",
   "author": "Stepan Lusnikov <endenwer@gmail.com>",

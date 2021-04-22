@@ -10,7 +10,8 @@
     "baseUrl": "./",
     /* paths - If you configure Snowpack import aliases, add them here. */
     "paths": {
-      "svelte-restate/*": ["../src/*"]
+      "svelte-restate": ["../src"],
+      "svelte-restate/devtools": ["../src/devtools"],
     },
     "noEmit": true,
     "strict": true,
