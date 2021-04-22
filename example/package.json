@@ -1,6 +1,4 @@
 {
-  "name": "svelte-restate example",
-  "version": "1.0.0",
   "author": "Stepan Lusnikov <endenwer@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/endenwer/svelte-restate.git",
