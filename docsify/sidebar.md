@@ -1,0 +1,8 @@
+* [Getting started](/)
+  * [Install](/#install)
+  * [Usage](/#usage)
+* [API](/docs/api.md)
+  * [svelte-restate](/docs/api.md#svelte-restate)
+  * [svelte-restate/devtools](/docs/api.md#svelte-restate-devtools)
+  * [Restate instance](/docs/api.md#restate)
+  * [Subscription instance](/docs/api.md#subscription)
