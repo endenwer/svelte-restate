@@ -8,7 +8,7 @@ interface Project {
 
 interface State {
   isLoading: boolean
-  projects: Record<number, Project | undefined>
+  projects: Record<number, Project>
 }
 
 const initState: State = {
