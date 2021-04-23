@@ -1,6 +1,6 @@
 {
-  "name": "Svelete Restate example",
-  "description": "Svelte state subscriptions/mutations",
+  "name": "svelte-restate",
+  "description": "Immutable store for Svelte with full Typescript support and Redux Devtools integration",
   "version": "0.1.0",
   "author": "Stepan Lusnikov <endenwer@gmail.com>",
   "license": "MIT",
@@ -14,12 +14,13 @@
   ],
   "files": [
     "dist",
+    "devtools",
     "README.MD"
   ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "test": "mocha --require sucrase/register --recursive src/**/*.test.ts",
     "typecheck": "tsc --noEmit"
   },
