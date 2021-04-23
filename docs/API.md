@@ -139,7 +139,7 @@ Registers new mutation handler.
 Paramenters:
 
 * `name` - name of the mutation
-* `handler` - mutation handler, it will receive root state with paramenters. This function should mutate `draft`. You can read more about update patters in Immer documentation https://immerjs.github.io/immer/update-patterns.
+* `handler` - mutation handler, it will receive root state with paramenters. This function should mutate `draft`. You can read more about update patterns in Immer documentation https://immerjs.github.io/immer/update-patterns.
 
 ```ts
 import store from './store'

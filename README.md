@@ -1,6 +1,6 @@
 ## Svelte Restate
 
-Immutable store for Svelte with full Typescript support and Redux Devtools integration.
+Immutable store for Svelte with full Typescript support and Redux Devtools integration. It is highly inspired by [re-frame](https://github.com/day8/re-frame) subscriptions. Read more about signal graph and subscription layers [here](https://day8.github.io/re-frame/subscriptions/).
 
 <a id=install></a>
 ## Install
@@ -11,7 +11,6 @@ npm i svelte-restate --save
 
 <a id=usage></a>
 ## Usage [[Demo]](https://svelte-restate-example.netlify.app/)
-
 
 Create store with initial state.
 ```ts
@@ -127,5 +126,3 @@ import store from './store'
 
 connectToDevTools(store, muts)
 ```
-
-See more examples in demo.
