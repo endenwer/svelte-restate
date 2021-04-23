@@ -34,7 +34,7 @@ const initState: State = {
 export default createStore(initState)
 ```
 
-Create subscriptions. See more examples in documentation for [`RegRootsub`](/docs/api.md#reg-root-sub) and [`RegSub`](/docs/api.md#reg-sub).
+Create subscriptions. See more examples in documentation for [`RegRootsub`](/docs/API.md#reg-root-sub) and [`RegSub`](/docs/API.md#reg-sub).
 ```ts
 import store from './store'
 
@@ -66,7 +66,7 @@ const todo = store.regSub(
 export default { count }
 ```
 
-Create mutations. See more examples in documentation for [`RegMut`](/docs/api.md#reg-mut).
+Create mutations. See more examples in documentation for [`RegMut`](/docs/API.md#reg-mut).
 ```ts
 import store from './store'
 
@@ -120,7 +120,7 @@ Use in svelte component.
 {/if}
 ```
 
-Connect to Redux devtools. See documentation for [`connectToDevtools`](/docs/api.md#connect-to-devtools).
+Connect to Redux devtools. See documentation for [`connectToDevtools`](/docs/API.md#connect-to-devtools).
 ```ts
 import muts from './muts'
 import store from './store'
