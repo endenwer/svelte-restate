@@ -10,7 +10,8 @@ npm i svelte-restate --save
 ```
 
 <a id=usage></a>
-## Usage
+## Usage [[Demo]](https://svelte-restate-example.netlify.app/)
+
 
 Create store with initial state.
 ```ts
