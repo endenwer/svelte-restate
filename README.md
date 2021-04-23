@@ -92,8 +92,8 @@ Use in svelte component.
   import { onMount } 'svelete'
   import { fetchTodos } './api'
 
-  // subscription without arguments
-  // to get the value use '$isLoading'
+  // subscription without arguments.
+  // To get the value use '$isLoading'
   const isLoading = subs.isLoading()
 
   // subscription with arguments
