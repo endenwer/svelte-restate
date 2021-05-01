@@ -102,7 +102,7 @@ Use in svelte component.
   // use mutations
   onMount(async () => {
    muts.setLoading(true)
-   const todos = fetchTodos()
+   const todos = await fetchTodos()
 
    // call multiple mutations within transaction
    store.transaction(tx => [
