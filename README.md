@@ -1,6 +1,6 @@
 ## Svelte Restate
 
-Immutable store for Svelte with full Typescript support and Redux Devtools integration. It is highly inspired by [re-frame](https://github.com/day8/re-frame) subscriptions (read more about signal graph and subscription layers [here](https://day8.github.io/re-frame/subscriptions/)). [Immer](https://immerjs.github.io/immer/) is used to work with immutable state.
+Immutable store for Svelte with full Typescript support and Redux Devtools integration. It is highly inspired by [re-frame](https://github.com/day8/re-frame) subscriptions(read more about signal graph and subscription layers [here](https://day8.github.io/re-frame/subscriptions/)). [Immer](https://immerjs.github.io/immer/) is used to work with immutable state.
 
 <a id=install></a>
 ## Install

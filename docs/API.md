@@ -52,7 +52,7 @@ export default createStore(initState)
 <a id=connect-to-devtools></a>
 ### `connectToDevTools(store: Restate<any>, muts: {[key: string]: Function} = {})`
 
-Connects to Redux Devtools. To dispatch mutaions from devtools you need to pass mutaions object as second argument.
+Connects to Redux Devtools. To dispatch mutations from the devtools you need to pass them as second argument.
 
 <a id=restate></a>
 ## `Restate<T>`
@@ -67,12 +67,12 @@ Root subscription.
 <a id=reg-root-sub></a>
 ### `regRootSub<V, Args extends any[]>(name: string, computationFn: (values: StoresValues<Subscription<T>>, args: Args) => V): (...args: Args) => Subscription<V>`
 
-Creates new root subscription and cache it. The returned function will accept subscription's arguments and will create new subscription on first call and return cached subscription on consecitive calls.
+Creates new root subscription and caches it. The returned function will accept subscription's arguments and will create a new subscription on the first call and return cached subscription on consecutive calls.
 
 Parameters:
 
 * `name` - name of the subscription
-* `computationFn` - this function will receive root state as first paramenter and arguments as the second. It should calculate subscription value and return it
+* `computationFn` - this function will receive root state and an array of subscription's arguments. It should calculate subscription value and return it.
 
 ```ts
 import store from './store'
@@ -90,13 +90,13 @@ export default {
 <a id=reg-sub></a>
 ### `regSub<V, S extends Subscriptions, Args extends any[]>(name: string, inputStoresFn: (args: Args) => S, computationFn: (values: StoresValues<S>, args: Args) => V): (...args: Args) => Subscription<V>`
 
-Works like `ReguRootSub`, but accept `inputStoresFn` as the second arguments.
+Works like `ReguRootSub`, but accepts `inputStoresFn` as the second arguments.
 
 Parameters:
 
 * `name` - name of the subscription
 * `inputStoresFn` - accept subscription's arguments and returns subscriptions
-* `computationFn` - this function will receive root state as first paramenter and arguments as the second. It should calculate subscription value and return it.
+* `computationFn` - this function will receive values of subscriptions returned by `inputStoresFn` and subscription's arguments. It should calculate subscription value and return it.
 
 ```ts
 import store from './store'
@@ -136,10 +136,10 @@ const isTodoIncludesString = store.RegSub(
 
 Registers new mutation handler.
 
-Paramenters:
+Parameters:
 
 * `name` - name of the mutation
-* `handler` - mutation handler, it will receive root state with paramenters. This function should mutate `draft`. You can read more about update patterns in Immer documentation https://immerjs.github.io/immer/update-patterns.
+* `handler` - this function will receive root state with mutation's arguments. It should mutate `draft`. You can read more about update patterns in Immer documentation https://immerjs.github.io/immer/update-patterns.
 
 ```ts
 import store from './store'
@@ -164,9 +164,9 @@ export default {
 <a id=transaction></a>
 ### `transaction(fn: (tx: Transaction<T>) => MutReturnValue[]): void`
 
-Execute multiple mutations within transaction.
+Executes multiple mutations within transaction.
 
-Paramenters:
+Parameters:
 
 * `fn` - transaction function, should return an array of mutations
 
@@ -191,7 +191,7 @@ export function loadTodos() {
 
 Listens for subscription creation and removal.
 
-Paramenters:
+Parameters:
 
 * `handler` - receives action name and parameters
 
@@ -208,7 +208,7 @@ store.listenSubs((action, params) => {
 
 Listens for mutations.
 
-Paramenters:
+Parameters:
 
 * `handler` - receives mutation name and parameters
 
@@ -223,7 +223,7 @@ store.listenMuts((name, params) => {
 <a id=set></a>
 ### `set(value: T)`
 
-Directy mutates state. It is recomended to use mutation when you need to change state. This function is used for integration with Redux Devtools.
+Directy mutates state. It is recomended to use mutations when you need to change state. This function is used for integration with Redux Devtools.
 
 <a id=get-running-subs-state></a>
 ### `getRunningSubsState(): {[key: string]: any}`
