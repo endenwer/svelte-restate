@@ -72,6 +72,64 @@ describe('createStore', () => {
       unsubscribe2()
       assert.deepStrictEqual(Object.keys(store.getRunningSubsState()), [])
     })
+
+    it('does not propagate undefined value with propagateUndefined = false', () => {
+      const store = createStore(initState, { propagateUndefined: false })
+      const project = store.regSub(
+        'project',
+        () => store.root,
+        ($root, [id]: [number]) => $root.projects[id]
+      )
+      const projectName = store.regSub(
+        'projectName',
+        ([id]: [number]) => project(id),
+        ($project) => $project.name
+      )
+
+      const deleteProject = store.regMut<number>(
+        'deleteProject',
+        (draft, id) => {
+          delete draft.projects[id]
+        }
+      )
+
+      const projectNameValues: string[] = []
+      const unsubscribe = projectName(1).subscribe(v => projectNameValues.push(v))
+
+      assert.deepStrictEqual(projectNameValues, ['project1'])
+      deleteProject(1)
+      assert.deepStrictEqual(projectNameValues, ['project1'])
+      unsubscribe()
+    })
+
+    it ('propagates undefined value with propagateUndefined = true', () => {
+      const store = createStore(initState, { propagateUndefined: true })
+      const project = store.regSub(
+        'project',
+        () => store.root,
+        ($root, [id]: [number]) => $root.projects[id]
+      )
+      const projectName = store.regSub(
+        'projectName',
+        ([id]: [number]) => project(id),
+        ($project) => $project ? $project.name : ''
+      )
+
+      const deleteProject = store.regMut<number>(
+        'deleteProject',
+        (draft, id) => {
+          delete draft.projects[id]
+        }
+      )
+
+      const projectNameValues: string[] = []
+      const unsubscribe = projectName(1).subscribe(v => projectNameValues.push(v))
+
+      assert.deepStrictEqual(projectNameValues, ['project1'])
+      deleteProject(1)
+      assert.deepStrictEqual(projectNameValues, ['project1', ''])
+      unsubscribe()
+    })
   })
 
   describe('regRootSub', () => {

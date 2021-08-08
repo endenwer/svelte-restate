@@ -3,6 +3,10 @@ import type { Draft } from 'immer'
 import { produce, createDraft, finishDraft } from 'immer'
 import { derived, writable, get } from  'svelte/store'
 
+const DEFAULT_STORE_OPTIONS: StoreOptions = {
+  propagateUndefined: true
+}
+
 export interface Restate<T> {
   regSub<V, S extends Subscriptions, Args extends any[]>(
     name: string,
@@ -65,8 +69,13 @@ type MutHandlerWithParams<T, Params> = (params: Params, tx?: Transaction<T>) => 
 type MutHandler<T> = (tx?: Transaction<T>) => MutReturnValue
 type MutListener = (name: string, params: unknown) => void
 
-export function createStore<T>(initState: T): Restate<T> {
+interface StoreOptions {
+  propagateUndefined: boolean
+}
+
+export function createStore<T>(initState: T, storeOptions: Partial<StoreOptions> = {}): Restate<T> {
   const store = writable(initState)
+  const options = Object.assign(DEFAULT_STORE_OPTIONS, storeOptions)
   const runningSubs: RunningSubs = {}
   const mutListeners: MutListener[] = []
   const subListeners: SubListener[] = []
@@ -121,6 +130,11 @@ export function createStore<T>(initState: T): Restate<T> {
 
       const stores = inputStoresFn(args)
       const handler = (values: StoresValues<S>, setFn: (value: V) => void) => {
+        const isUndefinedValues = Array.isArray(values) && values.includes(undefined) || values === undefined
+        if (!options.propagateUndefined && isUndefinedValues) {
+          return
+        }
+
         setFn(computationFn(values, args))
       }
 

@@ -22,9 +22,13 @@
 ## svelte-restate
 
 <a id=create-store></a>
-### `createStore<T>(initState: T): Restate<T>`
+### `createStore<T>(initState: T, storeOptions: Partial<StoreOptions> = {}): Restate<T>`
 
 Creates new store with initial state. See [`Restate<T>` documentation](#restate-object-api).
+
+Store options:
+
+* `propagateUndefined: boolean` - if `false`, derived stores won't be recalculated when one of its signals is undefined. See tests for examples. Default `true`.
 
 ```ts
 import { createStore } from 'svelte-restate'
